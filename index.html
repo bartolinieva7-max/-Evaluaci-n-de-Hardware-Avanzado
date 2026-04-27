@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Evaluación · Aceleradores de IA y Refrigeración Termoeléctrica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(135deg, #fff0e6 0%, #e0f0fa 50%, #f5e0ff 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, sans-serif;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .exam-wrapper {
+            max-width: 860px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffffdd;
+            backdrop-filter: blur(3px);
+            border-radius: 2rem;
+            box-shadow: 0 22px 40px -14px rgba(0, 0, 0, 0.22);
+            padding: 1.5rem 1.8rem;
+            transition: all 0.25s;
+        }
+        .exam-header {
+            text-align: center;
+            margin-bottom: 1.4rem;
+            border-bottom: 4px solid #ff8c42;
+            padding-bottom: 0.8rem;
+        }
+        .exam-header h1 {
+            font-size: 1.9rem;
+            background: linear-gradient(135deg, #1e6f9f, #d45d00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.25rem;
+        }
+        .exam-header .subtitle {
+            color: #c75b1e;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .exam-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            background: #e8e1f3;
+            border-radius: 2rem;
+            padding: 0.55rem 1.2rem;
+            margin-bottom: 1.6rem;
+            font-weight: 700;
+            color: #1d3557;
+            font-size: 0.9rem;
+        }
+        .badge {
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.2px;
+        }
+        .badge-info {
+            background: #ffcc88;
+            color: #5c3d1e;
+        }
+        .badge-score {
+            background: #88ccaa;
+            color: #1b4d2e;
+        }
+        .badge-topic {
+            background: #b8c8f0;
+            color: #1e3a5f;
+            font-size: 0.78rem;
+        }
+        .question-block {
+            background: #ffffff;
+            border-radius: 1.4rem;
+            padding: 1.2rem 1.3rem;
+            margin-bottom: 1.1rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+            border-left: 7px solid #ff8c42;
+            border-right: 1px solid #f0e0d0;
+            transition: all 0.2s;
+            scroll-margin-top: 0.8rem;
+        }
+        .question-block.answered-correct {
+            border-left-color: #3cb878 !important;
+            background: #f8fff8;
+        }
+        .question-block.answered-incorrect {
+            border-left-color: #e15554 !important;
+            background: #fff6f6;
+        }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+        .q-num {
+            font-weight: 800;
+            color: #2c3e66;
+            font-size: 1rem;
+            background: #eef3ff;
+            padding: 0.15rem 0.7rem;
+            border-radius: 20px;
+        }
+        .q-topic {
+            font-size: 0.75rem;
+            color: #8b6b4d;
+            font-weight: 700;
+            background: #fff3e0;
+            padding: 0.15rem 0.7rem;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+        .question-text {
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: #1f2c44;
+            margin-bottom: 0.9rem;
+            line-height: 1.45;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            margin-bottom: 0.7rem;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            cursor: pointer;
+            padding: 0.55rem 0.8rem;
+            border-radius: 0.9rem;
+            background: #fdfaf6;
+            border: 2px solid #e3d4c0;
+            transition: all 0.15s;
+        }
+        .option:hover {
+            background: #fff5e9;
+            border-color: #ffaa66;
+            transform: scale(1.01);
+        }
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.15rem;
+            height: 1.15rem;
+            border: 2.2px solid #d45d00;
+            border-radius: 50%;
+            margin-top: 0.1rem;
+            cursor: pointer;
+            background: white;
+            flex-shrink: 0;
+            transition: 0.15s;
+        }
+        input[type="radio"]:checked {
+            background-color: #d45d00;
+            border-color: #d45d00;
+            box-shadow: inset 0 0 0 3px white;
+        }
+        .option label {
+            flex: 1;
+            font-size: 0.93rem;
+            line-height: 1.35;
+            cursor: pointer;
+            color: #2c3e66;
+            font-weight: 600;
+        }
+        .feedback-line {
+            margin-top: 0.6rem;
+            padding: 0.55rem 0.9rem;
+            border-radius: 0.8rem;
+            font-size: 0.82rem;
+            line-height: 1.4;
+            border-left: 5px solid;
+            display: none;
+            background: #fffbf0;
+            color: #2c3e50;
+        }
+        .feedback-line.show {
+            display: block;
+        }
+        .feedback-line.correct-fb {
+            border-left-color: #3cb878;
+            background: #e7faf0;
+            color: #1b5e3a;
+        }
+        .feedback-line.incorrect-fb {
+            border-left-color: #e15554;
+            background: #ffeded;
+            color: #7a2828;
+        }
+        .feedback-line.pending-fb {
+            border-left-color: #f0b040;
+            background: #fff9ed;
+            color: #6b4d1c;
+        }
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.3rem;
+            padding-top: 0.8rem;
+            border-top: 2px solid #e9dfd0;
+        }
+        .btn {
+            border: none;
+            background: #d5c8b0;
+            color: #463a28;
+            font-weight: 800;
+            padding: 0.65rem 1.5rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            letter-spacing: 0.2px;
+        }
+        .btn-primary {
+            background: #3a86ff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2a6ad0;
+            transform: scale(1.03);
+        }
+        .btn-success {
+            background: #44aa66;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #338855;
+            transform: scale(1.03);
+        }
+        .btn-reset {
+            background: #ff8c42;
+            color: white;
+        }
+        .btn-reset:hover {
+            background: #e07530;
+            transform: scale(1.03);
+        }
+        .score-summary {
+            margin-top: 1.2rem;
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 800;
+            padding: 0.8rem;
+            border-radius: 1.2rem;
+            background: #fff3d6;
+            border: 2px solid #f0b040;
+            color: #4a3515;
+            display: none;
+        }
+        .score-summary.show {
+            display: block;
+        }
+        .to-top-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #ff8c42;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 99;
+            transition: 0.2s;
+        }
+        .to-top-btn:hover {
+            background: #e07530;
+            transform: scale(1.1);
+        }
+        footer {
+            text-align: center;
+            font-size: 0.72rem;
+            margin-top: 1rem;
+            color: #a08866;
+            letter-spacing: 0.2px;
+        }
+        @media (max-width: 600px) {
+            .exam-wrapper {
+                padding: 1rem;
+            }
+            .question-text {
+                font-size: 0.94rem;
+            }
+            .option label {
+                font-size: 0.86rem;
+            }
+            .btn {
+                padding: 0.55rem 1.1rem;
+                font-size: 0.82rem;
+            }
+            .exam-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="exam-wrapper" id="examWrapper">
+    <div class="exam-header">
+        <h1>⚙️❄️ Evaluación de Hardware Avanzado</h1>
+        <div class="subtitle">Aceleradores de IA · GPU · TPU · NPU · Refrigeración Termoeléctrica · HPC</div>
+    </div>
+    <div class="exam-meta">
+        <span class="badge badge-info" id="questionCount">📋 10 preguntas</span>
+        <span class="badge badge-topic" id="topicMix">🎯 Banco: 40 preguntas</span>
+        <span class="badge badge-score" id="liveScoreDisplay">⭐ Puntuación: — / 10</span>
+    </div>
+    <div id="questionsContainer"></div>
+    <div class="action-bar">
+        <button id="correctBtn" class="btn btn-success">✅ Corregir Examen</button>
+        <button id="newExamBtn" class="btn btn-reset">🔄 Nueva Prueba (otro alumno)</button>
+    </div>
+    <div id="scoreSummary" class="score-summary"></div>
+    <footer>📌 Responde las 10 preguntas y presiona <strong>"Corregir Examen"</strong>. Cada acierto vale 1 punto. Las opciones se barajan en cada prueba.</footer>
+</div>
+<button class="to-top-btn" id="toTopBtn" title="Ir arriba">⬆</button>
+
+<script>
+    (function() {
+        // ==================== BANCO UNIFICADO DE 40 PREGUNTAS ====================
+        const fullBank = [
+            // --- Cuestionario 1: Aceleradores de IA (20 preguntas) ---
+            {
+                topic: "IA · NPU Edge",
+                text: "Un ingeniero debe desplegar un modelo de lenguaje de gran escala (LLM) para un cliente que exige privacidad absoluta de los datos y ejecución sin conexión a internet en dispositivos móviles. ¿Qué componente de hardware es el cuello de botella crítico para esta implementación?",
+                options: ["El ancho de banda de la GPU en el centro de datos.", "La capacidad de procesamiento tensorial de una TPU Cloud.", "La eficiencia y latencia de la NPU integrada en el SoC del dispositivo.", "El número de núcleos CUDA disponibles en estaciones de trabajo locales."],
+                correct: "c",
+                explanation: "Correcta (c): Las NPU permiten ejecución local (Edge Computing) garantizando privacidad y baja latencia, operando con milivatios."
+            },
+            {
+                topic: "IA · CUDA",
+                text: "Si una empresa decide migrar su flujo de trabajo de entrenamiento de arquitecturas NVIDIA a una solución de silicio personalizada (In-House Silicon), ¿cuál es el obstáculo técnico más profundo que enfrentará según el concepto de 'Foso Competitivo'?",
+                options: ["La falta de potencia bruta en los nuevos chips.", "El coste de re-ingeniería debido a la dependencia del ecosistema CUDA.", "La imposibilidad de usar memorias HBM3 en chips propios.", "La ausencia de conectividad 5G en los aceleradores personalizados."],
+                correct: "b",
+                explanation: "Correcta (b): Cambiar de plataforma implica re-ingeniería enorme porque CUDA es el estándar industrial con librerías optimizadas (cuDNN, cuBLAS)."
+            },
+            {
+                topic: "IA · TPU",
+                text: "En el diseño de una TPU, se sacrifica la generalidad para implementar 'matrices sistólicas'. ¿Qué ventaja técnica directa ofrece este diseño frente a una arquitectura de CPU tradicional?",
+                options: ["Mayor capacidad para manejar múltiples sistemas operativos simultáneamente.", "Optimización radical para la multiplicación de matrices y tensores.", "Reducción del uso de memoria HBM para procesos de inferencia.", "Versatilidad para renderizado 3D y simulaciones científicas complejas."],
+                correct: "b",
+                explanation: "Correcta (b): Las TPU están optimizadas exclusivamente para redes neuronales mediante matrices sistólicas, maximizando rendimiento por vatio."
+            },
+            {
+                topic: "IA · Optimización",
+                text: "Durante la 'Fase 2: Optimización' del ciclo de vida de la IA, se realizan procesos de cuantización y pruning. ¿Cuál es el objetivo técnico de estas operaciones en relación con el hardware de destino?",
+                options: ["Aumentar el número de parámetros del modelo para mejorar la precisión.", "Adaptar el modelo para que pueda ser absorbido masivamente por una GPU H100.", "Destilar el modelo para hacerlo más ligero y compatible con la inferencia en NPU.", "Incrementar el consumo energético para acelerar el tiempo de entrenamiento."],
+                correct: "c",
+                explanation: "Correcta (c): La optimización reduce el modelo para que sea eficiente en dispositivos finales (movilidad/privacidad) o servidores a escala."
+            },
+            {
+                topic: "IA · NVIDIA L40S",
+                text: "Se requiere una solución para un laboratorio de investigación independiente que necesita realizar tanto entrenamiento de modelos experimentales como inferencia de prueba. ¿Qué hardware de la jerarquía de NVIDIA ofrece el mejor equilibrio técnico?",
+                options: ["NVIDIA H100 (SXM5) por su ancho de banda.", "NVIDIA L40S, diseñado para balancear entrenamiento e inferencia.", "RTX 4090, centrada exclusivamente en investigación local.", "NVIDIA A100, por ser el estándar de la generación previa."],
+                correct: "b",
+                explanation: "Correcta (b): La L40S es definida como el 'equilibrio', un chip versátil para balancear ambas tareas."
+            },
+            {
+                topic: "IA · Fotónica",
+                text: "¿Por qué el consumo energético de los centros de datos (300-700W por GPU) se considera un factor determinante para la evolución hacia la computación fotónica?",
+                options: ["Porque la electricidad es más cara que la luz en términos de infraestructura.", "Para evitar los cuellos de botella térmicos usando luz en lugar de electricidad.", "Porque las NPU no pueden escalar a niveles de centros de datos.", "Para permitir que los smartphones funcionen como servidores de entrenamiento."],
+                correct: "b",
+                explanation: "Correcta (b): La computación fotónica se presenta como alternativa para evitar problemas térmicos y mejorar la eficiencia ante consumo insostenible."
+            },
+            {
+                topic: "IA · NPU vs GPU",
+                text: "Un arquitecto de sistemas compara una GPU y una NPU para una aplicación de reconocimiento facial en tiempo real en cámaras de seguridad. ¿Cuál es la principal razón para elegir la NPU?",
+                options: ["Su capacidad para realizar GPGPU (computación de propósito general).", "Su madurez en el ecosistema de software como PyTorch.", "Su baja latencia y eficiencia extrema en tareas de inferencia en el borde.", "La posibilidad de entrenar el modelo directamente en la cámara."],
+                correct: "c",
+                explanation: "Correcta (c): Las NPU están diseñadas para ejecutar redes neuronales con eficiencia extrema en aplicaciones embebidas sin agotar recursos."
+            },
+            {
+                topic: "IA · TPU Flexibilidad",
+                text: "En la comparativa de 'Flexibilidad', la TPU se sitúa en un nivel 'Media'. ¿Qué limita técnicamente a la TPU frente a una GPU?",
+                options: ["Solo puede ser fabricada por NVIDIA.", "Está restringida casi exclusivamente al ámbito del Deep Learning.", "No admite el uso de frameworks como TensorFlow.", "Tiene un consumo energético mayor que una GPU de centros de datos."],
+                correct: "b",
+                explanation: "Correcta (b): La GPU es versátil (entrenamiento, 3D, simulaciones); la TPU sacrifica generalidad para ser un 'bisturí' en redes neuronales."
+            },
+            {
+                topic: "IA · H100",
+                text: "Al analizar las especificaciones de una H100, se observa un ancho de banda de 3.35 TB/s. ¿Cuál es la función técnica primordial de este ancho de banda en el entrenamiento masivo?",
+                options: ["Permitir la conexión inalámbrica más rápida entre servidores.", "Facilitar la absorción masiva de datos y el ajuste de pesos en modelos frontera.", "Reducir la necesidad de núcleos CUDA en la arquitectura Hopper.", "Optimizar la batería de los dispositivos móviles que consumen el modelo."],
+                correct: "b",
+                explanation: "Correcta (b): El entrenamiento masivo requiere fuerza bruta de hardware para procesar datos y ajustar pesos en semanas o meses."
+            },
+            {
+                topic: "IA · ASIC",
+                text: "¿Cuál es la diferencia fundamental entre un ASIC y un procesador de propósito general (CPU) según la analogía del material?",
+                options: ["El ASIC es una 'navaja suiza' que maneja múltiples tareas operativas.", "La CPU es un chip diseñado desde cero para una tarea concreta.", "El ASIC es una especialización extrema para una única función, minimizando latencia y consumo.", "La CPU es más eficiente energéticamente que un ASIC en tareas de IA."],
+                correct: "c",
+                explanation: "Correcta (c): CPU es navaja suiza (versátil); ASIC es bisturí (especializado para máxima eficiencia en una tarea)."
+            },
+            {
+                topic: "IA · Ciclo de vida",
+                text: "Un desarrollador nota que su modelo de IA funciona perfectamente en la nube (TPU) pero es demasiado lento en un smartphone. ¿Qué paso del ciclo de vida de la IA probablemente omitió?",
+                options: ["La fase de entrenamiento masivo en granjas de servidores.", "La Fase 2 de Optimización (cuantización y pruning).", "La compra de una licencia de CUDA para el dispositivo móvil.", "La migración del modelo de PyTorch a C++."],
+                correct: "b",
+                explanation: "Correcta (b): Antes del despliegue (inferencia) es necesaria la optimización para destilar el modelo y hacerlo ligero para el hardware final."
+            },
+            {
+                topic: "IA · In-House",
+                text: "En el contexto de 'In-House Silicon', ¿qué motiva a empresas como Amazon (Trainium) o Google (TPU) a desarrollar sus propios chips?",
+                options: ["La falta de potencia de las CPUs comerciales.", "La necesidad de reducir la dependencia de NVIDIA y mejorar la eficiencia por vatio.", "El deseo de vender hardware físico directamente a los consumidores.", "La incompatibilidad de las GPUs con el almacenamiento en la nube."],
+                correct: "b",
+                explanation: "Correcta (b): Las Big Tech desarrollan silicio propio para ganar independencia de proveedores externos y optimizar su infraestructura."
+            },
+            {
+                topic: "IA · TOPS/W",
+                text: "Si se evalúa la métrica TOPS/W, ¿cuál de los siguientes escenarios representa la mayor eficiencia técnica?",
+                options: ["Una GPU consumiendo 700W para inferencia general.", "Una NPU operando en milivatios para inferencia local.", "Una CPU manejando tareas de IA junto con el sistema operativo.", "Una TPU en la nube entrenando el modelo Gemini."],
+                correct: "b",
+                explanation: "Correcta (b): La NPU destaca por su bajísimo consumo (milivatios), maximizando operaciones por vatio (TOPS/W) en el borde."
+            },
+            {
+                topic: "IA · Hopper",
+                text: "¿Qué característica técnica de la arquitectura Hopper (H100) la sitúa como el estándar actual para centros de datos?",
+                options: ["Su capacidad de funcionar sin refrigeración activa.", "La integración de 80 GB de memoria HBM3 y alto ancho de banda.", "Su bajo coste de adquisición para investigadores independientes.", "Que puede ser instalada directamente en un smartphone."],
+                correct: "b",
+                explanation: "Correcta (b): La H100 es referencia actual por sus especificaciones de memoria HBM3 y capacidad operativa masiva."
+            },
+            {
+                topic: "IA · Neuromórfica",
+                text: "¿Qué diferencia conceptual existe entre la computación neuromórfica y la computación tradicional de IA?",
+                options: ["La neuromórfica usa luz en lugar de electrones.", "La neuromórfica imita la arquitectura física del cerebro biológico.", "La neuromórfica se basa exclusivamente en núcleos CUDA.", "La neuromórfica solo es aplicable a la renderización 3D."],
+                correct: "b",
+                explanation: "Correcta (b): La computación neuromórfica busca imitar la estructura biológica del cerebro para mejorar la eficiencia."
+            },
+            {
+                topic: "IA · Matriz Diagnóstico",
+                text: "En la Matriz de Diagnóstico, ¿qué acelerador se recomienda para 'Inferencia en el dispositivo'?",
+                options: ["GPU.", "TPU.", "NPU.", "CPU."],
+                correct: "c",
+                explanation: "Correcta (c): La matriz asigna inferencia en dispositivo a la NPU por su bajo consumo y entorno físico (Smartphones/IoT)."
+            },
+            {
+                topic: "IA · GPU Versátil",
+                text: "¿Por qué se afirma que la GPU es el 'estándar versátil' a pesar de la existencia de chips más especializados como la TPU?",
+                options: ["Porque es más barata de producir.", "Por su capacidad de ejecutar miles de operaciones simultáneas y su ecosistema maduro (CUDA/librerías).", "Porque consume menos energía que una NPU.", "Porque es la única que puede entrenar modelos como Gemini."],
+                correct: "b",
+                explanation: "Correcta (b): Su versatilidad y el respaldo de años de optimización de software la mantienen como base del entrenamiento masivo."
+            },
+            {
+                topic: "IA · Dron NPU",
+                text: "Un sistema de IA embebido en un dron debe detectar objetos en tiempo real con una batería muy limitada. ¿Cuál es el diagnóstico de hardware adecuado?",
+                options: ["Conexión vía 5G a una granja de GPUs.", "Uso de una NPU local para minimizar latencia de red y consumo.", "Instalación de una RTX 4090 con un generador externo.", "Dependencia total de la CPU del dron para todas las tareas."],
+                correct: "b",
+                explanation: "Correcta (b): La NPU habilita funciones sin latencia de red y protege la batería, ideal para aplicaciones móviles y tiempo real."
+            },
+            {
+                topic: "IA · Librerías",
+                text: "¿Cuál es el papel de librerías como cuDNN y NCCL en el dominio de mercado de NVIDIA?",
+                options: ["Son lenguajes de programación que reemplazan a Python.", "Son capas superiores de software altamente optimizadas que facilitan el uso del hardware.", "Son componentes físicos que se añaden al chip después de su fabricación.", "Son protocolos de seguridad para evitar el hackeo de modelos de IA."],
+                correct: "b",
+                explanation: "Correcta (b): Estas librerías forman parte del ecosistema de software que crea la barrera de salida para competidores."
+            },
+            {
+                topic: "IA · Sostenibilidad",
+                text: "Un centro de datos planea migrar su workload hacia una solución más sostenible. Según la matriz de diagnóstico, ¿qué tecnología debería priorizar para reducir significativamente el consumo sin sacrificar capacidad de entrenamiento?",
+                options: ["Más GPUs H100 para lograr más TOPS.", "Incrementar el número de CPUs para manejar la lógica de control.", "Reemplazar las GPUs por TPUs si el workload es exclusivamente Deep Learning.", "Eliminar el uso de NPUs en el borde."],
+                correct: "c",
+                explanation: "Correcta (c): Las TPU son más eficientes energéticamente para cargas de Deep Learning, reduciendo la huella energética en centros de datos."
+            },
+
+            // --- Cuestionario 2: Refrigeración Termoeléctrica en HPC (20 preguntas) ---
+            {
+                topic: "TEC · Hotspots",
+                text: "Un ingeniero observa que un ASIC de 700W presenta hotspots que superan en 30°C la temperatura media del die. ¿Por qué un sistema de refrigeración líquida directa (DLC) convencional no es suficiente para este escenario específico?",
+                options: ["Porque el fluido refrigerante tiene una capacidad calorífica insuficiente para el silicio.", "Porque el DLC es un sistema reactivo que no puede enfriar por debajo de la temperatura del fluido de retorno.", "Porque la viscosidad del refrigerante impide la transferencia de calor en nodos de 3 nm.", "Porque los coldplates de cobre presentan una resistencia térmica de interfaz insuperable."],
+                correct: "b",
+                explanation: "Correcta (b): El DLC no puede enfriar por debajo de la temperatura del refrigerante, lo que limita su eficacia ante hotspots que requieren temperaturas específicas controladas activamente."
+            },
+            {
+                topic: "TEC · COP",
+                text: "Para optimizar el Coeficiente de Rendimiento (COP) en un módulo Peltier basado en Bi₂Te₃, ¿en qué rango de fracción de corriente (I/Imax) debería operarse el sistema?",
+                options: ["Entre 0,8 y 1,0 para maximizar la capacidad de bombeo de calor (Qmax).", "Cerca de 0,1 para minimizar el efecto Joule parásito.", "Entre 0,3 y 0,6 para equilibrar el calor extraído frente a la energía eléctrica consumida.", "Exactamente en 1,0 para alcanzar el ΔTmax especificado por el fabricante."],
+                correct: "c",
+                explanation: "Correcta (c): La optimización del COP se logra operando el TEC en una fracción de corriente típicamente entre 0,3 y 0,6, maximizando la relación Qc / (Qc + P)."
+            },
+            {
+                topic: "TEC · Respuesta",
+                text: "En una carga de trabajo con ráfagas computacionales (burst) impredecibles, ¿cuál es la ventaja crítica de un TEC frente a la refrigeración por inmersión?",
+                options: ["La mayor conductividad térmica de los semiconductores tipo P y N.", "El tiempo de respuesta en milisegundos que permite compensar gradientes instantáneos.", "La capacidad de eliminar totalmente el ruido acústico en el rack.", "La reducción del PUE global del centro de datos mediante disipación pasiva."],
+                correct: "b",
+                explanation: "Correcta (b): Los TEC tienen tiempos de respuesta de milisegundos, críticos para cargas con burst térmico, frente a segundos/minutos de sistemas líquidos."
+            },
+            {
+                topic: "TEC · Electromigración",
+                text: "¿Qué parámetro de diseño es fundamental para evitar la degradación por electromigración en aceleradores de IA de última generación?",
+                options: ["El uso de ventiladores de alto caudal para reducir la temperatura ambiente.", "El control preciso de la temperatura de unión mediante lazo PID para evitar picos térmicos.", "El incremento de la tensión de umbral en los transistores del die.", "La sustitución de interconexiones de cobre por fibras ópticas internas."],
+                correct: "b",
+                explanation: "Correcta (b): Las altas temperaturas aceleran la electromigración; controladores PID en TECs mantienen estabilidad térmica mitigando el deterioro."
+            },
+            {
+                topic: "TEC · PWM",
+                text: "Al diseñar el driver de potencia para un TEC, se recomienda una salida PWM de alta frecuencia (>50 kHz). ¿Cuál es el objetivo técnico principal de esta especificación?",
+                options: ["Aumentar la Figura de Mérito (ZT) de los materiales semiconductores.", "Minimizar el ripple de corriente para reducir el ruido electromagnético y el estrés térmico en el módulo.", "Invertir la polaridad del módulo instantáneamente para funciones de calefacción.", "Reducir el consumo de energía eléctrica del convertidor AC-DC principal."],
+                correct: "b",
+                explanation: "Correcta (b): PWM de alta frecuencia minimiza el ripple de corriente, mejorando eficiencia y reduciendo interferencias electromagnéticas."
+            },
+            {
+                topic: "TEC · Inmersión",
+                text: "¿Cuál es la principal restricción operativa de la refrigeración por inmersión en comparación con la integración de TECs de Nivel 1?",
+                options: ["La inmersión no permite el control térmico a nivel de componente individual.", "La inmersión es incompatible con GPUs de arquitectura Blackwell.", "Los TECs requieren fluidos dieléctricos para funcionar, mientras que la inmersión no.", "El coste de mantenimiento de un sistema sólido es mayor que el de uno líquido."],
+                correct: "a",
+                explanation: "Correcta (a): La inmersión carece de control térmico a nivel de componente individual, algo que la tecnología Peltier sí ofrece."
+            },
+            {
+                topic: "TEC · Cuántica",
+                text: "En un sistema de computación cuántica, ¿qué rol desempeñan los módulos Peltier en cascada (multi-stage)?",
+                options: ["Actúan como el sistema de refrigeración principal para alcanzar el cero absoluto.", "Funcionan como primera etapa para llevar componentes de temperatura ambiente a rangos sub-cero (e.g., -40°C).", "Eliminan la necesidad de sistemas criogénicos de dilución mediante el efecto Seebeck.", "Estabilizan la tensión de alimentación de los qubits superconductores."],
+                correct: "b",
+                explanation: "Correcta (b): Los TEC en cascada se usan como etapa inicial de enfriamiento para reducir la carga sobre sistemas criogénicos más complejos."
+            },
+            {
+                topic: "TEC · Cara Caliente",
+                text: "Si un diseño térmico de Nivel 4 (TEC + bomba de calor) se implementa incorrectamente y la cara caliente no evacua el calor de manera eficiente, ¿qué fenómeno ocurrirá?",
+                options: ["El ΔT entre caras aumentará indefinidamente hasta el punto de fusión del silicio.", "El calor generado por el propio TEC (P_eléctrica) se sumará al del chip, sobrecalentando la unión.", "El coeficiente Seebeck se volverá negativo, invirtiendo el flujo de calor automáticamente.", "El sistema entrará en un estado de superconducción térmica pasiva."],
+                correct: "b",
+                explanation: "Correcta (b): El subsistema de disipación debe evacuar tanto Qc como P_eléctrica; de lo contrario el calor acumulado sobrecalienta la unión."
+            },
+            {
+                topic: "TEC · Nivel 1",
+                text: "¿Por qué la integración de TECs 'embebidos directamente en el encapsulado' (Nivel 1) ofrece el mejor rendimiento térmico?",
+                options: ["Porque utiliza materiales cerámicos de mayor conductividad que el cobre.", "Porque minimiza la resistencia térmica de interfaz (Rth,interface) al estar en máxima proximidad al die.", "Porque elimina la necesidad de un controlador PID externo.", "Porque permite que el chip opere sin consumo de energía eléctrica externa."],
+                correct: "b",
+                explanation: "Correcta (b): La arquitectura de Nivel 1 minimiza la resistencia térmica de interfaz al colocar el TEC lo más cerca posible del die."
+            },
+            {
+                topic: "TEC · Sub-ambiente",
+                text: "¿Cuál es el beneficio directo de lograr un enfriamiento sub-ambiente en semiconductores según el documento?",
+                options: ["Incremento del ruido acústico para facilitar el diagnóstico de fallos.", "Reducción de la tensión de umbral y posibilidad de overclocking térmicamente estable.", "Aumento automático del MTBF por encima de las 500.000 horas.", "Eliminación total de la necesidad de materiales de interfaz térmica (TIM)."],
+                correct: "b",
+                explanation: "Correcta (b): El enfriamiento sub-ambiente reduce tensiones de umbral y permite overclocking estable."
+            },
+            {
+                topic: "TEC · Muestreo",
+                text: "Al diagnosticar un sistema que sufre throttling térmico a pesar de tener un TEC, se detecta que el sensor de temperatura tiene una tasa de muestreo de 10 Hz. ¿Por qué esto es un error de diseño?",
+                options: ["Porque los termopares tipo K solo funcionan a frecuencias superiores a 1 kHz.", "Porque se requiere una tasa de muestreo de 1 kHz para igualar la respuesta rápida del TEC ante burst térmicos.", "Porque a 10 Hz el algoritmo PID consume demasiada memoria en la FPGA.", "Porque el ripple de corriente se vuelve infinito a bajas frecuencias de muestreo."],
+                correct: "b",
+                explanation: "Correcta (b): El sistema necesita alta tasa de muestreo (~1 kHz) para igualar la respuesta rápida del TEC y evitar throttling."
+            },
+            {
+                topic: "TEC · Edge",
+                text: "En un escenario de Edge Computing con temperaturas ambientales de +70°C, ¿cómo ayuda el control bidireccional del TEC?",
+                options: ["Permite usar el TEC como generador de energía para alimentar el sensor de temperatura.", "Permite enfriar activamente el acelerador y mantener una latencia de inferencia constante.", "Evita que el aire caliente del entorno entre en contacto con el rack.", "Reduce la humedad relativa dentro del encapsulado del ASIC."],
+                correct: "b",
+                explanation: "Correcta (b): El control activo compensa variaciones ambientales extremas, garantizando estabilidad operativa en el edge."
+            },
+            {
+                topic: "TEC · Matriz",
+                text: "Un ASIC de IA tiene un perfil térmico no uniforme. ¿Qué arquitectura de integración es la más adecuada para gestionar hotspots sub-die específicos?",
+                options: ["Refrigeración por aire con heatsinks de aluminio de gran tamaño.", "Matrices de múltiples TECs pequeños (Nivel 3) posicionados sobre los hotspots.", "Inmersión en líquido monofásico para uniformar la temperatura global.", "Aumento de la frecuencia de reloj en las zonas frías del die."],
+                correct: "b",
+                explanation: "Correcta (b): Múltiples TECs (Nivel 3) permiten gestión granular y localizada del calor en superficies no uniformes."
+            },
+            {
+                topic: "TEC · ZT",
+                text: "¿Cuál es el impacto de la Figura de Mérito (ZT) en el diseño de futuros sistemas de refrigeración?",
+                options: ["Un mayor ZT indica que el material es más pesado y difícil de integrar.", "Un aumento en ZT permite duplicar la eficiencia de enfriamiento y mejorar el COP.", "ZT es un parámetro puramente teórico que no afecta al rendimiento real.", "Cuanto mayor es el ZT, mayor es el riesgo de fugas de refrigerante."],
+                correct: "b",
+                explanation: "Correcta (b): El avance en ZT (de 1,2 a >2,0) mejora drásticamente la eficiencia de los módulos termoeléctricos."
+            },
+            {
+                topic: "TEC · Coldplate",
+                text: "Un sistema híbrido utiliza un TEC acoplado a un coldplate de cobre (Nivel 2). ¿Qué función cumple el coldplate en este diseño?",
+                options: ["Actúa como la cara fría que absorbe el calor del silicio.", "Sirve para evacuar el calor de la cara caliente del TEC hacia un sistema secundario.", "Sustituye al material semiconductor tipo N para reducir costes.", "Genera la corriente eléctrica necesaria para alimentar el módulo Peltier."],
+                correct: "b",
+                explanation: "Correcta (b): El coldplate evacua el calor acumulado en la cara caliente del TEC hacia un sistema secundario."
+            },
+            {
+                topic: "TEC · PUE",
+                text: "¿Qué problema de la refrigeración por aire convencional se vuelve 'inaceptable' al superar los 20-30 kW por rack?",
+                options: ["El consumo de agua destilada.", "El ruido acústico y la degradación del PUE.", "La falta de conductores de cobre en los ventiladores.", "La imposibilidad de usar filtros de aire HEPA."],
+                correct: "b",
+                explanation: "Correcta (b): A altas densidades, el ruido y la ineficiencia energética (PUE) de los sistemas por aire llegan a límites inaceptables."
+            },
+            {
+                topic: "TEC · TCO",
+                text: "En el contexto del TCO (Total Cost of Ownership), ¿cómo se justifica el alto consumo eléctrico de un módulo Peltier (COP 0,3-0,7)?",
+                options: ["Porque el TEC genera electricidad sobrante que se devuelve a la red.", "Porque evitar un fallo prematuro o una pérdida de rendimiento del 15-30% compensa el coste energético.", "Porque el gobierno ofrece subsidios para tecnologías de estado sólido.", "Porque los TECs eliminan la necesidad de pagar licencias de software de gestión térmica."],
+                correct: "b",
+                explanation: "Correcta (b): El coste operativo extra es despreciable frente a las pérdidas por throttling o fallo del hardware."
+            },
+            {
+                topic: "TEC · Estado Sólido",
+                text: "¿Qué ventaja ofrece el estado sólido total de los TECs en comparación con los sistemas DLC?",
+                options: ["Capacidad de enfriar mayores superficies por centímetro cuadrado.", "Ausencia de partes móviles y de riesgo de fugas de fluidos.", "Menor coste inicial de adquisición de materiales.", "Posibilidad de funcionar sin necesidad de alimentación DC."],
+                correct: "b",
+                explanation: "Correcta (b): Al no tener fluidos ni partes móviles, se eliminan riesgos de mantenimiento y fallos mecánicos."
+            },
+            {
+                topic: "TEC · Throttling",
+                text: "Para un sistema de entrenamiento de modelos de IA a gran escala, ¿qué beneficio reporta mantener la T_junction constante?",
+                options: ["Permite reducir el tamaño de las fuentes de alimentación del servidor.", "Elimina el throttling térmico que degrada el rendimiento en sesiones prolongadas.", "Cambia la arquitectura de la red neuronal de Transformer a CNN de forma automática.", "Reduce la latencia de red entre los nodos del clúster."],
+                correct: "b",
+                explanation: "Correcta (b): Mantener temperatura constante evita el throttling, maximizando el rendimiento computacional neto."
+            },
+            {
+                topic: "TEC · Retrofit",
+                text: "Al realizar un 'Retrofit' de tecnología Peltier sobre hardware existente, ¿cuál es la principal desventaja mencionada?",
+                options: ["El sistema se vuelve demasiado ligero y pierde estabilidad mecánica.", "El coste es de 3 a 5 veces superior al de una integración nativa en el diseño original.", "Los TECs no pueden instalarse si el hardware ya ha sido encendido una vez.", "Se requiere cambiar todo el sistema operativo para reconocer el módulo Peltier."],
+                correct: "b",
+                explanation: "Correcta (b): La integración nativa es mucho más eficiente en costes que adaptar la tecnología a sistemas ya diseñados (retrofit)."
+            }
+        ];
+
+        const LETTERS = ['a', 'b', 'c', 'd'];
+
+        function shuffleQuestionOptions(originalQ) {
+            const items = originalQ.options.map((text, idx) => ({ text, origIndex: idx }));
+            for (let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+            }
+            const newOptions = items.map(item => item.text);
+            const origCorrectIdx = LETTERS.indexOf(originalQ.correct);
+            let newCorrectIdx = -1;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].origIndex === origCorrectIdx) {
+                    newCorrectIdx = i;
+                    break;
+                }
+            }
+            const newCorrectLetter = LETTERS[newCorrectIdx];
+            let newExplanation = originalQ.explanation;
+            const regex = /^Correcta \([a-d]\):\s*/i;
+            const match = newExplanation.match(regex);
+            if (match) {
+                const rest = newExplanation.substring(match[0].length);
+                newExplanation = `Correcta (${newCorrectLetter}): ${rest}`;
+            }
+            return {
+                topic: originalQ.topic,
+                text: originalQ.text,
+                options: newOptions,
+                correct: newCorrectLetter,
+                explanation: newExplanation
+            };
+        }
+
+        const TOTAL_QUESTIONS = 10;
+        let currentExamQuestions = [];
+        let userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+        let examCorrected = false;
+
+        const questionsContainer = document.getElementById('questionsContainer');
+        const correctBtn = document.getElementById('correctBtn');
+        const newExamBtn = document.getElementById('newExamBtn');
+        const scoreSummary = document.getElementById('scoreSummary');
+        const liveScoreDisplay = document.getElementById('liveScoreDisplay');
+        const questionCountSpan = document.getElementById('questionCount');
+        const topicMixSpan = document.getElementById('topicMix');
+        const toTopBtn = document.getElementById('toTopBtn');
+
+        function initNewExam() {
+            const selectedIndices = [];
+            while (selectedIndices.length < TOTAL_QUESTIONS) {
+                const r = Math.floor(Math.random() * fullBank.length);
+                if (!selectedIndices.includes(r)) selectedIndices.push(r);
+            }
+            currentExamQuestions = selectedIndices.map(idx => shuffleQuestionOptions(fullBank[idx]));
+            userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+            examCorrected = false;
+            scoreSummary.classList.remove('show');
+            scoreSummary.innerHTML = '';
+            liveScoreDisplay.textContent = '⭐ Puntuación: — / 10';
+            questionCountSpan.textContent = `📋 ${TOTAL_QUESTIONS} preguntas`;
+            const topics = [...new Set(currentExamQuestions.map(q => q.topic))];
+            topicMixSpan.textContent = `🎯 Temas: ${topics.slice(0, 4).join(', ')}${topics.length > 4 ? '...' : ''}`;
+            renderAllQuestions();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function saveAnswer(index, letter) {
+            if (examCorrected) return;
+            userAnswers[index] = letter;
+            updateLiveScorePreview();
+            updateQuestionBlockVisual(index);
+        }
+
+        function updateLiveScorePreview() {
+            let correctCount = 0;
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                if (userAnswers[i] && userAnswers[i] === currentExamQuestions[i].correct) correctCount++;
+            }
+            liveScoreDisplay.textContent = `⭐ Puntuación: ${correctCount} / ${TOTAL_QUESTIONS}`;
+        }
+
+        function updateQuestionBlockVisual(index) {
+            const block = document.getElementById(`q-block-${index}`);
+            if (!block) return;
+            block.classList.remove('answered-correct', 'answered-incorrect');
+            if (examCorrected) {
+                const q = currentExamQuestions[index];
+                const userAns = userAnswers[index];
+                if (userAns) {
+                    block.classList.add(userAns === q.correct ? 'answered-correct' : 'answered-incorrect');
+                }
+            }
+            if (examCorrected) {
+                const fbEl = document.getElementById(`fb-${index}`);
+                if (fbEl) updateFeedbackElement(fbEl, index);
+            }
+        }
+
+        function renderAllQuestions() {
+            let html = '';
+            currentExamQuestions.forEach((q, idx) => {
+                const selected = userAnswers[idx];
+                const disabledAttr = examCorrected ? 'disabled' : '';
+                let blockClass = '';
+                if (examCorrected && selected) {
+                    blockClass = selected === q.correct ? 'answered-correct' : 'answered-incorrect';
+                }
+                html += `
+                <div class="question-block ${blockClass}" id="q-block-${idx}">
+                    <div class="q-header">
+                        <span class="q-num">📌 Pregunta ${idx + 1} de ${TOTAL_QUESTIONS}</span>
+                        <span class="q-topic">🔖 ${q.topic}</span>
+                    </div>
+                    <div class="question-text">${q.text}</div>
+                    <div class="options" id="options-${idx}">
+                `;
+                q.options.forEach((opt, optIdx) => {
+                    const letter = LETTERS[optIdx];
+                    const isChecked = (selected === letter);
+                    html += `
+                        <div class="option" data-letter="${letter}" data-qindex="${idx}">
+                            <input type="radio" name="q_${idx}" value="${letter}" id="opt_${idx}_${letter}" ${isChecked ? 'checked' : ''} ${disabledAttr}>
+                            <label for="opt_${idx}_${letter}"><strong>${letter.toUpperCase()})</strong> ${opt}</label>
+                        </div>
+                    `;
+                });
+                html += `
+                    </div>
+                    <div class="feedback-line ${examCorrected ? 'show' : ''} ${examCorrected ? (selected === q.correct ? 'correct-fb' : (selected ? 'incorrect-fb' : 'pending-fb')) : ''}" id="fb-${idx}">
+                        ${examCorrected ? getFeedbackText(idx) : ''}
+                    </div>
+                </div>
+                `;
+            });
+            questionsContainer.innerHTML = html;
+
+            document.querySelectorAll('.option').forEach(div => {
+                const qIndex = parseInt(div.getAttribute('data-qindex'));
+                const letter = div.getAttribute('data-letter');
+                const radio = div.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.addEventListener('change', () => {
+                        if (radio.checked) saveAnswer(qIndex, letter);
+                    });
+                }
+                div.addEventListener('click', (e) => {
+                    if (examCorrected) return;
+                    if (e.target.tagName !== 'INPUT') {
+                        const radioInside = div.querySelector('input');
+                        if (radioInside && !radioInside.checked) {
+                            radioInside.checked = true;
+                            saveAnswer(qIndex, letter);
+                        }
+                    }
+                });
+            });
+            updateLiveScorePreview();
+        }
+
+        function getFeedbackText(index) {
+            const q = currentExamQuestions[index];
+            const userAns = userAnswers[index];
+            if (!userAns) {
+                const correctIdx = LETTERS.indexOf(q.correct);
+                return `⚠️ <strong>Sin responder.</strong> La respuesta correcta es ${q.correct.toUpperCase()}) ${q.options[correctIdx]}.<br>${q.explanation}`;
+            }
+            if (userAns === q.correct) {
+                return `✅ <strong>¡Correcto!</strong> ${q.explanation}`;
+            } else {
+                const correctIdx = LETTERS.indexOf(q.correct);
+                return `❌ <strong>Incorrecto.</strong> La respuesta correcta es ${q.correct.toUpperCase()}) ${q.options[correctIdx]}.<br>${q.explanation}`;
+            }
+        }
+
+        function updateFeedbackElement(fbEl, index) {
+            const q = currentExamQuestions[index];
+            const userAns = userAnswers[index];
+            fbEl.innerHTML = getFeedbackText(index);
+            fbEl.classList.remove('correct-fb', 'incorrect-fb', 'pending-fb');
+            if (!userAns) fbEl.classList.add('pending-fb');
+            else if (userAns === q.correct) fbEl.classList.add('correct-fb');
+            else fbEl.classList.add('incorrect-fb');
+            fbEl.classList.add('show');
+        }
+
+        function correctExam() {
+            if (examCorrected) {
+                alert('El examen ya fue corregido. Presiona "Nueva Prueba" para generar otra evaluación.');
+                return;
+            }
+            const unanswered = userAnswers.filter(a => a === null).length;
+            if (unanswered > 0) {
+                if (!confirm(`Aún tienes ${unanswered} pregunta(s) sin responder. Las no respondidas contarán como incorrectas. ¿Deseas continuar?`)) return;
+            }
+            examCorrected = true;
+            let correctCount = 0;
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                if (userAnswers[i] === currentExamQuestions[i].correct) correctCount++;
+            }
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const block = document.getElementById(`q-block-${i}`);
+                const fbEl = document.getElementById(`fb-${i}`);
+                const q = currentExamQuestions[i];
+                const userAns = userAnswers[i];
+                const radios = document.querySelectorAll(`input[name="q_${i}"]`);
+                radios.forEach(r => r.disabled = true);
+                if (block) {
+                    block.classList.remove('answered-correct', 'answered-incorrect');
+                    if (userAns) block.classList.add(userAns === q.correct ? 'answered-correct' : 'answered-incorrect');
+                }
+                if (fbEl) updateFeedbackElement(fbEl, i);
+            }
+            const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+            let emoji = '🌟', message = '';
+            if (percent >= 90) { emoji = '🏆'; message = '¡Excelente dominio de los conceptos!'; }
+            else if (percent >= 70) { emoji = '👍'; message = 'Buen trabajo, repasa algunos temas.'; }
+            else if (percent >= 50) { emoji = '📚'; message = 'Necesitas reforzar varios conceptos clave.'; }
+            else { emoji = '💪'; message = 'Es recomendable repasar todo el material.'; }
+            scoreSummary.innerHTML = `${emoji} <strong>Resultado:</strong> ${correctCount} de ${TOTAL_QUESTIONS} aciertos (${percent}%)<br><span style="font-size:0.9rem;">${message}</span>`;
+            scoreSummary.classList.add('show');
+            liveScoreDisplay.textContent = `⭐ Puntuación: ${correctCount} / ${TOTAL_QUESTIONS}`;
+            scoreSummary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function newExam() {
+            if (examCorrected || userAnswers.some(a => a !== null)) {
+                if (!confirm('¿Generar una nueva prueba aleatoria? Se perderán las respuestas actuales.')) return;
+            }
+            initNewExam();
+        }
+
+        correctBtn.addEventListener('click', correctExam);
+        newExamBtn.addEventListener('click', newExam);
+        window.addEventListener('scroll', () => {
+            toTopBtn.style.display = window.scrollY > 500 ? 'flex' : 'none';
+        });
+        toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        initNewExam();
+    })();
+</script>
+</body>
+</html>
